@@ -8,6 +8,9 @@ import { MenuBar } from './MenuBar';
 import { Dock } from './Dock';
 import { SplashScreen } from './SplashScreen';
 import { LoginScreen } from './LoginScreen';
+import { CalendarWidget } from './widgets/CalendarWidget';
+import { WeatherWidget } from './widgets/WeatherWidget';
+// import { PhotosWidget } from './widgets/PhotosWidget';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Desktop folder shortcuts
@@ -20,12 +23,7 @@ interface DesktopFolder {
   color: string;
 }
 
-const DESKTOP_FOLDERS: DesktopFolder[] = [
-  { id: 'about',        title: 'About Me',      color: '#38bdf8' },
-  { id: 'projects',     title: 'My Projects',   color: '#a78bfa' },
-  { id: 'achievements', title: 'Achievements',  color: '#fbbf24' },
-  { id: 'contact',      title: 'Contact',       color: '#4ade80' },
-];
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FolderIcon
@@ -116,7 +114,7 @@ function MobileView() {
         <h1 className="text-2xl font-bold mb-1">Hi, I&apos;m Aryan</h1>
         <p className="text-white/45 text-sm mb-8 tracking-wide">Software Engineer</p>
 
-        <div className="grid grid-cols-2 gap-3">
+        {/* <div className="grid grid-cols-2 gap-3">
           {DESKTOP_FOLDERS.map((f) => (
             <motion.button
               key={f.id}
@@ -132,7 +130,7 @@ function MobileView() {
               <span className="text-xs text-white/75">{f.title}</span>
             </motion.button>
           ))}
-        </div>
+        </div> */}
 
         <p className="mt-10 text-center text-white/25 text-[11px] leading-relaxed">
           For the full macOS-style experience<br />visit on a desktop browser.
@@ -200,12 +198,23 @@ export function Desktop() {
           className="relative mt-7 overflow-hidden"
           style={{ height: 'calc(100vh - 1.75rem)' }}
         >
-          {/* Folder shortcuts — pinned to the right column */}
+          {/* Widgets — pinned to the top-left */}
+          <div className="absolute left-4 top-3 flex flex-col gap-3 pointer-events-auto">
+            {/* Row 1: Calendar + Weather */}
+            <div className="flex gap-3">
+              <CalendarWidget />
+              <WeatherWidget />
+            </div>
+            {/* Row 2: Photos (spans both columns) */}
+            {/* <PhotosWidget /> */}
+          </div>
+
+          {/* Folder shortcuts — pinned to the right column
           <div className="absolute right-3 top-3 flex flex-col gap-1">
             {DESKTOP_FOLDERS.map((f) => (
               <FolderIcon key={f.id} {...f} />
             ))}
-          </div>
+          </div> */}
         </main>
 
         {/* Fixed bottom dock */}

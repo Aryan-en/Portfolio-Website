@@ -4,6 +4,8 @@
  * the coloured gradient tile that DockIcon provides.
  */
 
+import Image from 'next/image';
+
 interface IconProps {
   size?: number;
   className?: string;
@@ -144,5 +146,186 @@ export function TrashDockIcon({ size = 24, className }: IconProps) {
       <line x1="50" y1="36" x2="50" y2="84" stroke="rgba(120,120,140,0.45)" strokeWidth="3" strokeLinecap="round" />
       <line x1="58" y1="36" x2="60" y2="84" stroke="rgba(120,120,140,0.45)" strokeWidth="3" strokeLinecap="round" />
     </svg>
+  );
+}
+
+// ─── Productivity / macOS system ──────────────────────────────────────────────
+
+export function AppStoreIcon({ size = 24, className }: IconProps) {
+  // White "A" pencil strokes — blue gradient tile provides background
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} className={className} aria-hidden>
+      {/* Left and right strokes of the "A" */}
+      <polyline
+        points="14,80 50,15 86,80"
+        fill="none"
+        stroke="white"
+        strokeWidth="11"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Crossbar */}
+      <line x1="30" y1="55" x2="70" y2="55" stroke="white" strokeWidth="11" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function LaunchpadIcon({ size = 24, className }: IconProps) {
+  // Search bar + 3×3 grid of coloured app squares
+  const GRID_COLORS = [
+    '#FF6B9D', '#FF3B30', '#FF9500',
+    '#34C759', '#00C7BE', '#AF52DE',
+    '#5856D6', '#007AFF', '#FF2D55',
+  ];
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} className={className} aria-hidden>
+      {/* Search pill */}
+      <rect x="10" y="8" width="80" height="20" rx="10" fill="rgba(120,120,130,0.45)" />
+      <circle cx="26" cy="18" r="5.5" fill="none" stroke="rgba(80,80,90,0.9)" strokeWidth="2.5" />
+      <line x1="30" y1="22" x2="34" y2="26" stroke="rgba(80,80,90,0.9)" strokeWidth="2.5" strokeLinecap="round" />
+      {/* 3 × 3 icon grid */}
+      {GRID_COLORS.map((fill, i) => {
+        const col = i % 3;
+        const row = Math.floor(i / 3);
+        return (
+          <rect
+            key={i}
+            x={13 + col * 26}
+            y={36 + row * 21}
+            width="18"
+            height="18"
+            rx="5"
+            fill={fill}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
+export function MailDockIcon({ size = 24, className }: IconProps) {
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} className={className} aria-hidden>
+      {/* Envelope body */}
+      <rect x="8" y="26" width="84" height="54" rx="9" fill="white" />
+      {/* V-fold crease */}
+      <path
+        d="M8 32 L50 58 L92 32"
+        fill="none"
+        stroke="rgba(28,100,210,0.3)"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// Gear geometry helper — computes 12-tooth gear body + centre hole (evenodd)
+function buildGearPath(): string {
+  const cx = 50, cy = 50, outerR = 44, innerR = 31, n = 12;
+  const holeR = 15;
+  const step = (Math.PI * 2) / n;
+  const half = step * 0.22;
+  const pts: string[] = [];
+
+  for (let i = 0; i < n; i++) {
+    const a = step * i - Math.PI / 2;
+    const p = (r: number, ang: number) =>
+      `${(cx + r * Math.cos(ang)).toFixed(2)},${(cy + r * Math.sin(ang)).toFixed(2)}`;
+    pts.push(
+      `${i === 0 ? 'M' : 'L'}${p(innerR, a - step / 2 + half)}`,
+      `L${p(outerR, a - half)}`,
+      `L${p(outerR, a + half)}`,
+      `L${p(innerR, a + step / 2 - half)}`,
+    );
+  }
+  pts.push('Z');
+  // Counter-clockwise circle for centre hole (evenodd makes it transparent)
+  pts.push(
+    `M${(cx + holeR).toFixed(2)},${cy}`,
+    `A${holeR},${holeR} 0 1,0 ${(cx + holeR - 0.01).toFixed(2)},${cy}`,
+    'Z',
+  );
+  return pts.join(' ');
+}
+const GEAR_PATH = buildGearPath();
+
+export function SettingsDockIcon({ size = 24, className }: IconProps) {
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} className={className} aria-hidden>
+      <path d={GEAR_PATH} fill="rgba(230,230,235,0.95)" fillRule="evenodd" />
+    </svg>
+  );
+}
+
+export function PreviewDockIcon({ size = 24, className }: IconProps) {
+  // Dark camera lens — blue tile provides the surrounding sky colour
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} className={className} aria-hidden>
+      {/* Outer lens barrel */}
+      <circle cx="50" cy="50" r="38" fill="rgba(0,0,0,0.55)" />
+      {/* Barrel ring highlight */}
+      <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="3" />
+      {/* Mid ring */}
+      <circle cx="50" cy="50" r="27" fill="rgba(0,0,0,0.75)" />
+      <circle cx="50" cy="50" r="27" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" />
+      {/* Inner glass */}
+      <circle cx="50" cy="50" r="17" fill="#0B1A38" />
+      {/* Lens flare highlight */}
+      <ellipse cx="40" cy="40" rx="7" ry="4.5" fill="white" opacity="0.18" transform="rotate(-35,40,40)" />
+    </svg>
+  );
+}
+
+export function NotesDockIcon({ size = 24, className }: IconProps) {
+  // Three horizontal ruled lines — yellow tile provides the notepad colour
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} className={className} aria-hidden>
+      <line x1="22" y1="37" x2="78" y2="37" stroke="rgba(160,120,0,0.65)" strokeWidth="6.5" strokeLinecap="round" />
+      <line x1="22" y1="52" x2="78" y2="52" stroke="rgba(160,120,0,0.65)" strokeWidth="6.5" strokeLinecap="round" />
+      <line x1="22" y1="67" x2="55" y2="67" stroke="rgba(160,120,0,0.65)" strokeWidth="6.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+// ─── Image-based icons ─────────────────────────────────────────────────────────
+
+export function FinderImageIcon({ size = 24, className }: IconProps) {
+  return (
+    <Image
+      src="/Finder.jpeg"
+      alt="Finder"
+      width={size || 24}
+      height={size || 24}
+      className={className}
+      style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+    />
+  );
+}
+
+export function TerminalImageIcon({ size = 24, className }: IconProps) {
+  return (
+    <Image
+      src="/Terminalicon3.png"
+      alt="Terminal"
+      width={size || 24}
+      height={size || 24}
+      className={className}
+      style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+    />
+  );
+}
+
+export function SafariImageIcon({ size = 24, className }: IconProps) {
+  return (
+    <Image
+      src="/Safari.jpg"
+      alt="Safari"
+      width={size || 24}
+      height={size || 24}
+      className={className}
+      style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+    />
   );
 }
