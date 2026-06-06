@@ -10,6 +10,7 @@ import { SplashScreen } from './SplashScreen';
 import { LoginScreen } from './LoginScreen';
 import { CalendarWidget } from './widgets/CalendarWidget';
 import { WeatherWidget } from './widgets/WeatherWidget';
+import { WindowManager } from './WindowManager';
 // import { PhotosWidget } from './widgets/PhotosWidget';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -209,12 +210,8 @@ export function Desktop() {
             {/* <PhotosWidget /> */}
           </div>
 
-          {/* Folder shortcuts — pinned to the right column
-          <div className="absolute right-3 top-3 flex flex-col gap-1">
-            {DESKTOP_FOLDERS.map((f) => (
-              <FolderIcon key={f.id} {...f} />
-            ))}
-          </div> */}
+          {/* All open app windows — rendered above desktop content */}
+          <WindowManager />
         </main>
 
         {/* Fixed bottom dock */}
