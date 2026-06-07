@@ -19,12 +19,9 @@ import {
   SafariImageIcon,
   TerminalImageIcon,
   TrashDockIcon,
-  AppStoreIcon,
-  LaunchpadIcon,
   MailDockIcon,
   SettingsDockIcon,
-  PreviewDockIcon,
-  NotesDockIcon,
+  ClaudeIcon,
 } from './DockIcons';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -64,15 +61,12 @@ const SOCIAL_APPS: DockApp[] = [
 ];
 
 const SYSTEM_APPS: DockApp[] = [
-  { id: 'finder',    title: 'Finder',    Icon: FinderImageIcon,   bg: 'linear-gradient(145deg,#1A7EF4,#0B62E4)' },
-  { id: 'launchpad', title: 'Launchpad', Icon: LaunchpadIcon,     bg: 'linear-gradient(145deg,#E8E8EC,#C8C8CE)' },
-  { id: 'appstore',  title: 'App Store', Icon: AppStoreIcon,      bg: 'linear-gradient(145deg,#1C90FF,#0B70D8)' },
-  { id: 'safari',    title: 'Safari',    Icon: SafariImageIcon,   bg: 'linear-gradient(145deg,#3478F6,#1254D4)' },
-  { id: 'mail',      title: 'Mail',      Icon: MailDockIcon,      bg: 'linear-gradient(145deg,#1E8EF5,#0A5FCC)' },
-  { id: 'notes',     title: 'Notes',     Icon: NotesDockIcon,     bg: 'linear-gradient(145deg,#FFD426,#FFB800)' },
-  { id: 'preview',   title: 'Preview',   Icon: PreviewDockIcon,   bg: 'linear-gradient(145deg,#4B8EC8,#1A5EA8)' },
-  { id: 'settings',  title: 'Settings',  Icon: SettingsDockIcon,  bg: 'linear-gradient(145deg,#8E8E93,#5A5A5E)' },
-  { id: 'terminal',  title: 'Terminal',  Icon: TerminalImageIcon, bg: 'linear-gradient(145deg,#1C1C1E,#000)' },
+  { id: 'finder',   title: 'Finder',   Icon: FinderImageIcon,   bg: 'linear-gradient(145deg,#1A7EF4,#0B62E4)' },
+  { id: 'safari',   title: 'Safari',   Icon: SafariImageIcon,   bg: 'linear-gradient(145deg,#3478F6,#1254D4)' },
+  { id: 'mail',     title: 'Mail',     Icon: MailDockIcon,      bg: 'linear-gradient(145deg,#1E8EF5,#0A5FCC)' },
+  { id: 'claude',   title: 'Claude',   Icon: ClaudeIcon,        bg: 'linear-gradient(145deg,#D4A27A,#CC6B3D)' },
+  { id: 'settings', title: 'Settings', Icon: SettingsDockIcon,  bg: 'linear-gradient(145deg,#8E8E93,#5A5A5E)' },
+  { id: 'terminal', title: 'Terminal', Icon: TerminalImageIcon, bg: 'linear-gradient(145deg,#1C1C1E,#000)' },
 ];
 
 const TRASH_APP: DockApp = {

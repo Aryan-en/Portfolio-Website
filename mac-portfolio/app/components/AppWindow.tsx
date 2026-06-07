@@ -5,21 +5,25 @@ import { motion } from 'framer-motion';
 import { Rnd } from 'react-rnd';
 import { ExternalLink } from 'lucide-react';
 import { useOsStore, type AppWindow as AppWindowType } from '@/src/store/useOsStore';
+import { SocialProfile } from './windows/SocialProfile';
+import { TerminalApp } from './windows/TerminalApp';
+import { FinderApp } from './windows/FinderApp';
+import { SettingsApp } from './windows/SettingsApp';
+import { MailApp } from './windows/MailApp';
+import { SafariApp } from './windows/SafariApp';
+import { ClaudeApp } from './windows/ClaudeApp';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// URL registry — maps app IDs to the page loaded inside the window
+// App routing — social/terminal get custom UIs; everything else uses iframe
 // ─────────────────────────────────────────────────────────────────────────────
+
+// These apps block iframe embedding — we show custom profile cards instead.
+const SOCIAL_APPS = new Set(['leetcode', 'github', 'linkedin', 'instagram']);
 
 export const APP_URLS: Record<string, string> = {
-  leetcode:  'https://leetcode.com/u/Aryan_1142/',
-  github:    'https://github.com/',
-  linkedin:  'https://www.linkedin.com/',
-  instagram: 'https://www.instagram.com/',
-  safari:    'https://www.google.com',
-  mail:      'https://mail.google.com',
-  appstore:  'https://apps.apple.com',
-  notes:     'https://www.notion.so',
-  preview:   'https://www.figma.com',
+  appstore: 'https://apps.apple.com',
+  notes:    'https://www.notion.so',
+  preview:  'https://www.figma.com',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -73,17 +77,18 @@ export function AppWindow({ win }: Props) {
 
   const [iframeLoading, setIframeLoading] = useState(true);
   const [closing, setClosing]             = useState(false);
+  const [timedOut, setTimedOut]           = useState(false);
 
-  // Blocked-site timeout — if the iframe hasn't finished loading in 7s we show
-  // a fallback so the user still has an "Open in Browser" path.
-  const [timedOut, setTimedOut] = useState(false);
+  const url         = APP_URLS[win.id];
+  const CUSTOM_APPS = new Set(['terminal', 'finder', 'settings', 'mail', 'safari', 'claude']);
+  const usesIframe  = !SOCIAL_APPS.has(win.id) && !CUSTOM_APPS.has(win.id) && !!url;
+
+  // 7-second fallback only matters for real iframe apps
   useEffect(() => {
-    if (!iframeLoading) return;
+    if (!usesIframe || !iframeLoading) return;
     const t = setTimeout(() => setTimedOut(true), 7000);
     return () => clearTimeout(t);
-  }, [iframeLoading]);
-
-  const url = APP_URLS[win.id];
+  }, [usesIframe, iframeLoading]);
 
   // Kick off close animation; store removal happens on animation completion.
   const handleClose = () => setClosing(true);
@@ -132,8 +137,8 @@ export function AppWindow({ win }: Props) {
           {win.title}
         </p>
 
-        {/* External-link shortcut */}
-        {url && (
+        {/* External-link shortcut — shown for iframe apps only */}
+        {usesIframe && (
           <a
             href={url}
             target="_blank"
@@ -149,10 +154,32 @@ export function AppWindow({ win }: Props) {
       </div>
 
       {/* ── Content ───────────────────────────────────────────────────────── */}
-      <div className="relative flex-1 overflow-hidden bg-white">
-        {url ? (
-          <>
-            {/* Loading / blocked overlay */}
+      <div className="relative flex-1 overflow-hidden">
+        {/* Social profile cards (sites that block iframe embedding) */}
+        {SOCIAL_APPS.has(win.id) ? (
+          <SocialProfile platform={win.id} />
+
+        ) : win.id === 'finder' ? (
+          <FinderApp />
+
+        ) : win.id === 'settings' ? (
+          <SettingsApp />
+
+        ) : win.id === 'terminal' ? (
+          <TerminalApp />
+
+        ) : win.id === 'mail' ? (
+          <MailApp />
+
+        ) : win.id === 'safari' ? (
+          <SafariApp />
+
+        ) : win.id === 'claude' ? (
+          <ClaudeApp />
+
+        ) : url ? (
+          <div className="relative w-full h-full bg-white">
+            {/* Loading overlay */}
             {(iframeLoading || timedOut) && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#F5F5F7] z-10">
                 {timedOut ? (
@@ -178,7 +205,6 @@ export function AppWindow({ win }: Props) {
                 )}
               </div>
             )}
-
             <iframe
               src={url}
               title={win.title}
@@ -187,7 +213,8 @@ export function AppWindow({ win }: Props) {
               allow="clipboard-read; clipboard-write; fullscreen"
               referrerPolicy="no-referrer"
             />
-          </>
+          </div>
+
         ) : (
           <div className="flex flex-col items-center justify-center h-full bg-[#F5F5F7] gap-2">
             <p className="text-[13px] text-gray-400 font-medium">{win.title}</p>

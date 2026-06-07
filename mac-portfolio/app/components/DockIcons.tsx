@@ -329,3 +329,18 @@ export function SafariImageIcon({ size = 24, className }: IconProps) {
     />
   );
 }
+
+export function ClaudeIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 100 100" className={className} aria-hidden fill="none">
+      {/* Anthropic "A" mark — simplified geometric bars */}
+      <rect x="22" y="28" width="14" height="44" rx="5" fill="white" fillOpacity="0.95"/>
+      <rect x="43" y="28" width="14" height="44" rx="5" fill="white" fillOpacity="0.95"/>
+      <rect x="64" y="28" width="14" height="44" rx="5" fill="white" fillOpacity="0.95"/>
+      {/* Top connecting bar */}
+      <rect x="22" y="28" width="56" height="14" rx="5" fill="white" fillOpacity="0.95"/>
+      {/* Middle bar */}
+      <rect x="22" y="50" width="56" height="10" rx="4" fill="white" fillOpacity="0.60"/>
+    </svg>
+  );
+}
